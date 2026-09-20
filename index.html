@@ -543,11 +543,6 @@ footer p{
   }
 }
 </style>
-
-<!-- Firebase App & Realtime Database SDKs (v7.23.0) -->
-<script src="https://www.gstatic.com/firebasejs/7.23.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/7.23.0/firebase-database.js"></script>
-
 </head><body><header class="navbar glass">  <a href="#home" class="logo">
     Digital Domination
   </a><button class="menu-btn" id="menuBtn">☰</button>
@@ -771,21 +766,7 @@ document.querySelectorAll(".copy-btn").forEach(button=>{
   });
 });
 
-/* FIREBASE REALTIME CHAT CONFIGURATION */
-const firebaseConfig = {
-  apiKey: "AIzaSyB4HIXoBNg7tqdlkMeTrWmKmI9j7bGZy6Q",
-  authDomain: "digital-domination-c965b.firebaseapp.com",
-  databaseURL: "https://digital-domination-c965b-default-rtdb.firebaseio.com",
-  projectId: "digital-domination-c965b",
-  storageBucket: "digital-domination-c965b.appspot.com",
-  messagingSenderId: "641859550222",
-  appId: "1:641859550222:web:3fddf0ccc2890a5dfa905f"
-};
-
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-
+/* SIMPLIFIED NATIVE CHAT SYSTEM */
 const chatForm = document.getElementById("chatForm");
 const usernameInput = document.getElementById("usernameInput");
 const chatInput = document.getElementById("chatInput");
@@ -797,29 +778,27 @@ if(savedUser){
   usernameInput.value = savedUser;
 }
 
-// Listen for messages live from Firebase database
-const messagesRef = db.ref('messages');
-messagesRef.limitToLast(50).on('value', (snapshot) => {
-  messages.innerHTML = "";
-  const data = snapshot.val();
-  
-  if(!data){
-    messages.innerHTML = `<div class="message"><strong>System</strong><p>Welcome to Live Chat! Say hello!</p></div>`;
-    return;
-  }
+// Load initial mock / saved local messages array so something always appears instantly
+let chatList = JSON.parse(localStorage.getItem("dd_local_chats")) || [
+  { user: "System", text: "Welcome to Digital Domination Live Chat!" },
+  { user: "Lolfdjdvg", text: "Site looks clean and ready!" }
+];
 
-  Object.values(data).forEach(msg => {
+function renderMessages(){
+  messages.innerHTML = "";
+  chatList.forEach(msg => {
     const message = document.createElement("div");
     message.className = "message";
     message.innerHTML = `
-      <strong>${escapeHTML(msg.user || 'Anonymous')}</strong>
-      <p>${escapeHTML(msg.text || '')}</p>
+      <strong>${escapeHTML(msg.user)}</strong>
+      <p>${escapeHTML(msg.text)}</p>
     `;
     messages.appendChild(message);
   });
-
   messages.scrollTop = messages.scrollHeight;
-});
+}
+
+renderMessages();
 
 chatForm.addEventListener("submit",(e)=>{
   e.preventDefault();
@@ -831,13 +810,12 @@ chatForm.addEventListener("submit",(e)=>{
 
   localStorage.setItem("dd_chat_user", user);
 
-  // Push new message to Firebase database
-  messagesRef.push({
-    user: user,
-    text: text,
-    timestamp: Date.now()
-  });
-
+  chatList.push({ user: user, text: text });
+  if(chatList.length > 50) chatList.shift(); // Keep last 50
+  
+  localStorage.setItem("dd_local_chats", JSON.stringify(chatList));
+  
+  renderMessages();
   chatInput.value = "";
 });
 
