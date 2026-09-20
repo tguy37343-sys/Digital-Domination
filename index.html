@@ -391,20 +391,30 @@ h1{
   font-size:14px;
 }
 
-.chat-form{
+.chat-inputs{
   display:flex;
+  flex-direction:column;
   gap:10px;
 }
 
-.chat-form input{
-  flex:1;
-  min-width:0;
-  padding:14px 16px;
+.chat-inputs input{
+  width:100%;
+  padding:12px 16px;
   border-radius:16px;
   border:1px solid var(--border);
   outline:none;
   background:rgba(0,0,0,.25);
   color:white;
+}
+
+.chat-row{
+  display:flex;
+  gap:10px;
+}
+
+.chat-row input{
+  flex:1;
+  min-width:0;
 }
 
 .chat-form button{
@@ -505,15 +515,22 @@ footer p{
     flex-direction:column;
   }
 
-  .chat-form{
+  .chat-row{
     flex-direction:column;
   }
 
   .chat-form button{
     min-height:48px;
+    width:100%;
   }
 }
-</style></head><body><header class="navbar glass">  <a href="#home" class="logo">
+</style>
+
+<!-- Firebase App & Realtime Database SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+</head><body><header class="navbar glass">  <a href="#home" class="logo">
     Digital Domination
   </a><button class="menu-btn" id="menuBtn">☰</button>
 
@@ -521,7 +538,7 @@ footer p{
     <a href="#home">Home</a>
     <a href="#ranks">Ranks</a>
     <a href="#scripts">Scripts</a>
-    <a href="#chat">General Chat</a>
+    <a href="#chat">Live Chat</a>
     <a href="#about">About</a>
   </nav></header><main><!-- HOME --><section id="home" class="hero">  <div>
     <span class="badge">ROBLOX GAMING COMMUNITY</span><h1>
@@ -536,7 +553,7 @@ footer p{
 
 <div class="buttons">
   <a href="#ranks" class="btn primary">View Ranks</a>
-  <a href="#chat" class="btn glass">General Chat</a>
+  <a href="#chat" class="btn glass">Live Chat</a>
 </div>
 
   </div>  <div class="hero-card glass"><div class="orb"></div>
@@ -652,36 +669,32 @@ footer p{
   </div>
 </div>
 
-  </div></section><!-- GENERAL CHAT --><section id="chat" class="section">  <div class="heading">
+  </div></section><!-- LIVE CHAT --><section id="chat" class="section">  <div class="heading">
     <span>COMMUNITY</span>
-    <h2>General Chat</h2>
-    <p>Talk with the Digital Domination community.</p>
-  </div>  <div class="chat glass"><div class="chat-messages" id="messages">
-
-  <div class="message">
-    <strong>Digital Domination</strong>
-    <p>Welcome to General Chat!</p>
-  </div>
-
-  <div class="message">
-    <strong>System</strong>
-    <p>Be respectful and have fun.</p>
-  </div>
-
-</div>
+    <h2>Live Chat</h2>
+    <p>Chat live with anyone visiting your website right now!</p>
+  </div>  <div class="chat glass"><div class="chat-messages" id="messages"></div>
 
 <form class="chat-form" id="chatForm">
-
-  <input
-    id="chatInput"
-    type="text"
-    placeholder="Write a message..."
-    maxlength="200"
-    required
-  >
-
-  <button type="submit">Send</button>
-
+  <div class="chat-inputs">
+    <input
+      id="usernameInput"
+      type="text"
+      placeholder="Your Name (e.g. Lolfdjdvg)"
+      maxlength="30"
+      required
+    >
+    <div class="chat-row">
+      <input
+        id="chatInput"
+        type="text"
+        placeholder="Type a message..."
+        maxlength="200"
+        required
+      >
+      <button type="submit">Send</button>
+    </div>
+  </div>
 </form>
 
   </div></section><!-- ABOUT --><section id="about" class="section">  <div class="heading">
@@ -740,46 +753,81 @@ document.querySelectorAll(".copy-btn").forEach(button=>{
   });
 });
 
-/* LOCAL GENERAL CHAT DEMO */
+/* FIREBASE REALTIME CHAT CONFIGURATION */
+const firebaseConfig = {
+  apiKey: "AIzaSyB4HIXoBNg7tqdlkMeTrWmKmI9j7bGZy6Q",
+  authDomain: "digital-domination-c965b.firebaseapp.com",
+  databaseURL: "https://digital-domination-c965b-default-rtdb.firebaseio.com",
+  projectId: "digital-domination-c965b",
+  storageBucket: "digital-domination-c965b.firebasestorage.app",
+  messagingSenderId: "641859550222",
+  appId: "1:641859550222:web:3fddf0ccc2890a5dfa905f",
+  measurementId: "G-ZGEN6EVTR9"
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
 
 const chatForm = document.getElementById("chatForm");
+const usernameInput = document.getElementById("usernameInput");
 const chatInput = document.getElementById("chatInput");
 const messages = document.getElementById("messages");
 
-chatForm.addEventListener("submit",(e)=>{
+// Remember username locally
+const savedUser = localStorage.getItem("dd_chat_user");
+if(savedUser){
+  usernameInput.value = savedUser;
+}
 
-  e.preventDefault();
+// Listen for messages live from Firebase database
+const messagesRef = db.ref('messages');
+messagesRef.limitToLast(50).on('value', (snapshot) => {
+  messages.innerHTML = "";
+  const data = snapshot.val();
+  
+  if(!data){
+    messages.innerHTML = `<div class="message"><strong>System</strong><p>Welcome to Live Chat! Say hello!</p></div>`;
+    return;
+  }
 
-  const text = chatInput.value.trim();
-
-  if(!text) return;
-
-  const message = document.createElement("div");
-
-  message.className = "message";
-
-  message.innerHTML = `
-    <strong>You</strong>
-    <p>${escapeHTML(text)}</p>
-  `;
-
-  messages.appendChild(message);
-
-  chatInput.value = "";
+  Object.values(data).forEach(msg => {
+    const message = document.createElement("div");
+    message.className = "message";
+    message.innerHTML = `
+      <strong>${escapeHTML(msg.user)}</strong>
+      <p>${escapeHTML(msg.text)}</p>
+    `;
+    messages.appendChild(message);
+  });
 
   messages.scrollTop = messages.scrollHeight;
-
 });
 
+chatForm.addEventListener("submit",(e)=>{
+  e.preventDefault();
+
+  const user = usernameInput.value.trim();
+  const text = chatInput.value.trim();
+
+  if(!user || !text) return;
+
+  localStorage.setItem("dd_chat_user", user);
+
+  // Push new message to Firebase database
+  messagesRef.push({
+    user: user,
+    text: text,
+    timestamp: Date.now()
+  });
+
+  chatInput.value = "";
+});
 
 function escapeHTML(text){
-
   const div = document.createElement("div");
-
   div.textContent = text;
-
   return div.innerHTML;
-
 }
 
 </script></body>
