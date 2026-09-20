@@ -297,19 +297,53 @@ h1{
 .script{
   padding:25px;
   border-radius:var(--radius);
+  display:flex;
+  flex-direction:column;
+  gap:14px;
 }
 
 .script h3{font-size:19px}
 
 .script p{
   color:var(--muted);
-  margin:10px 0 20px;
   font-size:14px;
 }
 
-.script .btn{
-  display:inline-block;
+.code-drawer{
+  display: none;
+  background: #000000;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  width: 100%;
+}
+
+.code-drawer.open{
+  display: block;
+}
+
+.code-box{
+  font-family: monospace;
+  font-size: 11px;
+  color: #00d9ff;
+  word-break: break-all;
+  white-space: pre-wrap;
+  max-width: 100%;
+}
+
+.script-actions{
+  display:flex;
+  gap:8px;
+  margin-top:auto;
+}
+
+.script-actions .btn{
+  flex:1;
   font-size:13px;
+  text-align:center;
+  padding:12px 10px;
 }
 
 /* ABOUT */
@@ -467,6 +501,10 @@ footer p{
     width:100%;
   }
 
+  .script-actions{
+    flex-direction:column;
+  }
+
   .chat-form{
     flex-direction:column;
   }
@@ -574,24 +612,44 @@ footer p{
     <span>LIBRARY</span>
     <h2>Scripts</h2>
     <p>
-      Your script collection can be added here later.
+      Official Roblox script collection for Digital Domination.
     </p>
-  </div>  <div class="script-grid"><div class="script glass">
-  <h3>Script One</h3>
-  <p>Add your script description here.</p>
-  <a href="#" class="btn primary">View Script</a>
+  </div>  <div class="script-grid">
+    
+<div class="script glass">
+  <h3>Gelatek Hub</h3>
+  <p>Main script hub.</p>
+  <div class="code-drawer">
+    <div class="code-box">loadstring(game:HttpGet("https://raw.githubusercontent.com/Gelatekussy/GelatekHub/main/Main.lua"))()</div>
+  </div>
+  <div class="script-actions">
+    <button class="btn glass more-btn">More</button>
+    <button class="btn primary copy-btn" data-script='loadstring(game:HttpGet("https://raw.githubusercontent.com/Gelatekussy/GelatekHub/main/Main.lua"))()'>Copy</button>
+  </div>
 </div>
 
 <div class="script glass">
-  <h3>Script Two</h3>
-  <p>Add your script description here.</p>
-  <a href="#" class="btn primary">View Script</a>
+  <h3>Hold Hats</h3>
+  <p>Hat positioning utility.</p>
+  <div class="code-drawer">
+    <div class="code-box">loadstring(game:HttpGet("https://pastebin.com/raw/EvqnRMN1"))()</div>
+  </div>
+  <div class="script-actions">
+    <button class="btn glass more-btn">More</button>
+    <button class="btn primary copy-btn" data-script='loadstring(game:HttpGet("https://pastebin.com/raw/EvqnRMN1"))()'>Copy</button>
+  </div>
 </div>
 
 <div class="script glass">
-  <h3>Script Three</h3>
-  <p>Add your script description here.</p>
-  <a href="#" class="btn primary">View Script</a>
+  <h3>Admin Noli</h3>
+  <p>Limb Reanimation script.</p>
+  <div class="code-drawer">
+    <div class="code-box">loadstring(game:HttpGet("https://raw.githubusercontent.com/Jskfhggjxu/My-Script/refs/heads/main/Admin%20Noli%20-%20Limb%20Reanimation.lua"))()</div>
+  </div>
+  <div class="script-actions">
+    <button class="btn glass more-btn">More</button>
+    <button class="btn primary copy-btn" data-script='loadstring(game:HttpGet("https://raw.githubusercontent.com/Jskfhggjxu/My-Script/refs/heads/main/Admin%20Noli%20-%20Limb%20Reanimation.lua"))()'>Copy</button>
+  </div>
 </div>
 
   </div></section><!-- GENERAL CHAT --><section id="chat" class="section">  <div class="heading">
@@ -658,6 +716,29 @@ document.querySelectorAll("#nav a").forEach(link=>{
   });
 });
 
+/* MORE BUTTON DRAWER TOGGLE */
+document.querySelectorAll(".more-btn").forEach(button=>{
+  button.addEventListener("click",()=>{
+    const scriptCard = button.closest(".script");
+    const drawer = scriptCard.querySelector(".code-drawer");
+    drawer.classList.toggle("open");
+    button.textContent = drawer.classList.contains("open") ? "Less" : "More";
+  });
+});
+
+/* COPY SCRIPT FUNCTIONALITY */
+document.querySelectorAll(".copy-btn").forEach(button=>{
+  button.addEventListener("click",()=>{
+    const scriptText = button.getAttribute("data-script");
+    navigator.clipboard.writeText(scriptText).then(()=>{
+      const originalText = button.textContent;
+      button.textContent = "Copied!";
+      setTimeout(()=>{
+        button.textContent = originalText;
+      }, 2000);
+    });
+  });
+});
 
 /* LOCAL GENERAL CHAT DEMO */
 
