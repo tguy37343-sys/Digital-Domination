@@ -3,11 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Digital Domination - Secure Access</title>
-
-<!-- App Shortcut Manifest Link -->
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#09090b">
+<title>Digital Domination - Script Hub</title>
 
 <style>
 :root{
@@ -17,8 +13,6 @@
   --border:rgba(255, 255, 255, 0.1);
   --text:#f4f4f5;
   --muted:#a1a1aa;
-  --accent:#ffffff;
-  --accent-light:#e4e4e7;
   --radius:24px;
   --max:1150px;
 }
@@ -44,10 +38,10 @@ a{text-decoration:none;color:inherit}
 /* Security Passcode Overlay */
 #authOverlay{
   position:fixed;top:0;left:0;width:100vw;height:100vh;
-  background:rgba(9, 9, 11, 0.95);
+  background:rgba(9, 9, 11, 0.98);
   backdrop-filter:blur(30px);
   -webkit-backdrop-filter:blur(30px);
-  z-index:9999;
+  z-index:99999;
   display:flex;justify-content:center;align-items:center;
   padding:20px;
   transition:opacity 0.4s ease, visibility 0.4s ease;
@@ -66,7 +60,7 @@ a{text-decoration:none;color:inherit}
 .auth-input{
   width:100%;padding:14px 16px;border-radius:14px;border:1px solid var(--border);
   background:rgba(255,255,255,0.05);color:var(--text);font-size:16px;
-  text-align:center;letter-spacing:2px;outline:none;transition:.2s;margin-bottom:14px;
+  text-align:center;letter-spacing:1px;outline:none;transition:.2s;margin-bottom:14px;
 }
 .auth-input:focus{border-color:rgba(255,255,255,0.3);background:rgba(255,255,255,0.08);}
 .auth-btn{
@@ -88,7 +82,6 @@ a{text-decoration:none;color:inherit}
 .logo-area{display:flex;align-items:center;gap:12px;}
 .logo{font-weight:800;letter-spacing:0.5px;color:var(--text);font-size:15px;}
 
-/* Status Pill Badge */
 .status-badge{
   display:flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;
   background:rgba(255,255,255,0.03);border:1px solid var(--border);
@@ -105,10 +98,11 @@ a{text-decoration:none;color:inherit}
   100%{transform:scale(0.95);opacity:0.8;}
 }
 
-nav{display:flex;gap:25px;}
+nav{display:flex;gap:25px;align-items:center;}
 nav a{color:var(--muted);font-size:13px;font-weight:500;transition:.2s;}
 nav a:hover{color:var(--text)}
 .menu-btn{display:none;border:0;background:none;color:var(--text);font-size:22px;}
+
 .hero{
   max-width:var(--max);min-height:100vh;margin:auto;padding:150px 25px 80px;
   display:grid;grid-template-columns:1.2fr .8fr;gap:50px;align-items:center;
@@ -125,10 +119,12 @@ h1{margin-top:20px;font-size:clamp(40px,6vw,76px);line-height:1.05;font-weight:8
 .btn:hover{background:var(--glass2);border-color:rgba(255, 255, 255, 0.2);}
 .primary{background:#f4f4f5;border:0;color:#09090b;}
 .primary:hover{background:#e4e4e7;}
+
 .section{max-width:var(--max);margin:auto;padding:80px 25px;}
 .heading{text-align:center;margin-bottom:45px;}
 .heading span{color:var(--muted);font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;}
 .heading h2{margin-top:6px;font-size:36px;font-weight:700;}
+
 .rank-grid, .script-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;}
 .script-grid{grid-template-columns:repeat(3,1fr);}
 .rank, .script, .about-box{padding:28px;border-radius:var(--radius);transition:.2s;}
@@ -138,108 +134,20 @@ h1{margin-top:20px;font-size:clamp(40px,6vw,76px);line-height:1.05;font-weight:8
 .names{margin-top:14px;display:flex;flex-wrap:wrap;gap:6px;}
 .name{padding:5px 10px;border-radius:8px;background:rgba(255, 255, 255, 0.05);border:1px solid rgba(255, 255, 255, 0.1);font-size:12px;color:var(--muted);font-weight:500;}
 
-/* True Liquid Glass Dropdown Containers */
 .code-drawer, .about-drawer{
-  display:none;
-  position:relative;
-  overflow:hidden;
+  display:none;position:relative;overflow:hidden;
   background: linear-gradient(135deg, rgba(39, 39, 42, 0.65), rgba(24, 24, 27, 0.75));
   border: 1px solid rgba(255, 255, 255, 0.15);
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37), inset 0 1px 1px 0 rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border-radius: 16px;
-  padding: 16px;
-  margin-top: 14px;
+  backdrop-filter: blur(24px);-webkit-backdrop-filter: blur(24px);
+  border-radius: 16px;padding: 16px;margin-top: 14px;
 }
-
-.code-drawer::before, .about-drawer::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0; height: 50%;
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.06), transparent);
-  pointer-events: none;
-}
-
 .code-drawer.open, .about-drawer.open{display:block;}
 .code-box{font-family:monospace;font-size:11px;color:#d4d4d8;word-break:break-all;position:relative;z-index:1;}
 .script-actions{display:flex;gap:8px;margin-top:16px;}
 .script-actions .btn{flex:1;font-size:12px;padding:10px;}
-.about-drawer h4{font-size:13px;color:var(--text);margin-bottom:6px;font-weight:600;position:relative;z-index:1;}
-.about-drawer p{color:var(--muted);font-size:13px;line-height:1.5;position:relative;z-index:1;}
-
-/* CUSTOM NATIVE VIDEO CALL SYSTEM STYLES */
-.video-system-container{
-  margin-top: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-.room-setup{
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  align-items: center;
-}
-.room-input{
-  flex: 1;
-  min-width: 160px;
-  padding: 12px 16px;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  background: rgba(255,255,255,0.05);
-  color: var(--text);
-  font-size: 16px;
-  letter-spacing: 2px;
-  text-align: center;
-  outline: none;
-}
-.video-grid{
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  width: 100%;
-}
-.video-card{
-  background: #000;
-  border-radius: 16px;
-  overflow: hidden;
-  border: 1px solid var(--border);
-  position: relative;
-  aspect-ratio: 16/9;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.video-card video{
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transform: scaleX(-1); /* mirror self view */
-}
-.video-label{
-  position: absolute;
-  bottom: 12px;
-  left: 12px;
-  background: rgba(0,0,0,0.6);
-  backdrop-filter: blur(10px);
-  padding: 4px 10px;
-  border-radius: 8px;
-  font-size: 11px;
-  color: #fff;
-  border: 1px solid rgba(255,255,255,0.1);
-}
-.call-controls{
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  margin-top: 4px;
-}
-.call-status{
-  text-align: center;
-  font-size: 13px;
-  color: var(--muted);
-}
+.about-drawer h4{font-size:13px;color:var(--text);margin-bottom:6px;font-weight:600;}
+.about-drawer p{color:var(--muted);font-size:13px;line-height:1.5;}
 
 footer{margin-top:40px;padding:30px;border-top:1px solid var(--border);text-align:center;color:var(--muted);font-size:13px;}
 
@@ -249,19 +157,17 @@ footer{margin-top:40px;padding:30px;border-top:1px solid var(--border);text-alig
   .menu-btn{display:block;}
   .hero{grid-template-columns:1fr;padding-top:120px;}
   .rank-grid, .script-grid{grid-template-columns:1fr;}
-  .video-grid{grid-template-columns:1fr;}
-  .status-badge{display:none;}
 }
 </style>
 </head>
 <body>
 
-<!-- Secure Passcode Overlay Screen -->
+<!-- Security Passcode Overlay Screen -->
 <div id="authOverlay">
   <div class="auth-box glass">
     <h2>Access Restricted</h2>
-    <p>Enter the security passcode to enter Digital Domination.</p>
-    <input type="password" id="passcodeInput" class="auth-input" placeholder="Enter passcode" maxlength="30">
+    <p>Enter the security passcode to view Digital Domination.</p>
+    <input type="text" id="passcodeInput" class="auth-input" placeholder="Enter passcode" maxlength="30" autocomplete="off" />
     <button id="authBtn" class="auth-btn">Unlock Access</button>
     <div id="errorMsg" class="error-msg">Incorrect passcode. Access denied.</div>
   </div>
@@ -282,7 +188,6 @@ footer{margin-top:40px;padding:30px;border-top:1px solid var(--border);text-alig
       <a href="#home">Home</a>
       <a href="#ranks">Ranks</a>
       <a href="#scripts">Scripts</a>
-      <a href="#videochat">Video Call</a>
       <a href="#about">About</a>
     </nav>
   </header>
@@ -381,43 +286,6 @@ footer{margin-top:40px;padding:30px;border-top:1px solid var(--border);text-alig
       </div>
     </section>
 
-    <!-- CUSTOM BUILT 6-DIGIT CODE VIDEO CALL SYSTEM -->
-    <section id="videochat" class="section">
-      <div class="heading">
-        <span>COMMUNICATION</span>
-        <h2>Secure 6-Digit Video Call</h2>
-      </div>
-      <div class="about-box glass">
-        <p>Generate a unique code to instantly start a meeting, or enter a code to join one.</p>
-        
-        <div class="video-system-container">
-          <div class="room-setup">
-            <button id="generateCodeBtn" class="btn primary">Generate Code</button>
-            <input type="text" id="roomInput" class="room-input" placeholder="000000" maxlength="6" />
-            <button id="joinRoomBtn" class="btn glass">Join Meeting</button>
-            <button id="leaveRoomBtn" class="btn glass" style="display:none;">Leave Call</button>
-          </div>
-          <div id="callStatus" class="call-status">Status: Disconnected</div>
-
-          <div class="video-grid">
-            <div class="video-card">
-              <video id="localVideo" autoplay muted playsinline></video>
-              <div class="video-label">You (Local)</div>
-            </div>
-            <div class="video-card">
-              <video id="remoteVideo" autoplay playsinline></video>
-              <div class="video-label">Peer (Remote)</div>
-            </div>
-          </div>
-
-          <div class="call-controls">
-            <button id="toggleMicBtn" class="btn glass" style="font-size: 12px; padding: 8px 16px;" disabled>Mute Mic</button>
-            <button id="toggleCamBtn" class="btn glass" style="font-size: 12px; padding: 8px 16px;" disabled>Turn Off Camera</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <section id="about" class="section">
       <div class="heading">
         <span>ABOUT US</span>
@@ -442,265 +310,85 @@ footer{margin-top:40px;padding:30px;border-top:1px solid var(--border);text-alig
 </div>
 
 <script>
-// --- SECURITY PASSCODE SYSTEM ---
+// --- ROBUST PASSCODE CHECK ---
 const correctPasscode = "spriteisgoat000";
 
-const authOverlay = document.getElementById("authOverlay");
-const mainContent = document.getElementById("mainContent");
-const passcodeInput = document.getElementById("passcodeInput");
-const authBtn = document.getElementById("authBtn");
-const errorMsg = document.getElementById("errorMsg");
-
-function checkPasscode() {
-  if (passcodeInput.value === correctPasscode) {
-    authOverlay.classList.add("hidden");
-    mainContent.classList.add("visible");
-  } else {
-    errorMsg.style.display = "block";
-    passcodeInput.style.borderColor = "#ef4444";
-    passcodeInput.value = "";
-    passcodeInput.focus();
-  }
-}
-
-authBtn.addEventListener("click", checkPasscode);
-passcodeInput.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") {
-    checkPasscode();
-  }
-});
-
-window.onload = () => {
-  passcodeInput.focus();
-};
-
-// --- WEBSITE FUNCTIONALITY ---
-document.getElementById("menuBtn").addEventListener("click", () => {
-  document.getElementById("nav").classList.toggle("active");
-});
-
-document.querySelectorAll(".more-btn").forEach(button => {
-  button.addEventListener("click", () => {
-    const card = button.closest(".script");
-    const drawer = card.querySelector(".code-drawer");
-    drawer.classList.toggle("open");
-    button.textContent = drawer.classList.contains("open") ? "Less" : "More";
-  });
-});
-
-document.querySelectorAll(".copy-btn").forEach(button => {
-  button.addEventListener("click", () => {
-    const text = button.getAttribute("data-script");
-    navigator.clipboard.writeText(text).then(() => {
-      button.textContent = "Copied!";
-      setTimeout(() => button.textContent = "Copy", 2000);
-    });
-  });
-});
-
-const aboutMoreBtn = document.getElementById("aboutMoreBtn");
-const aboutDrawer = document.getElementById("aboutDrawer");
-aboutMoreBtn.addEventListener("click", () => {
-  aboutDrawer.classList.toggle("open");
-  aboutMoreBtn.textContent = aboutDrawer.classList.contains("open") ? "Less" : "More";
-});
-
-// --- 6-DIGIT CODE WEBRTC VIDEO CALL SYSTEM (WITH WEBSOCKET SIGNALING) ---
-let localStream = null;
-let peerConnection = null;
-let signalingSocket = null;
-let currentRoom = null;
-let isCreator = false;
-
-let localVideo = document.getElementById("localVideo");
-let remoteVideo = document.getElementById("remoteVideo");
-let generateCodeBtn = document.getElementById("generateCodeBtn");
-let joinRoomBtn = document.getElementById("joinRoomBtn");
-let leaveRoomBtn = document.getElementById("leaveRoomBtn");
-let roomInput = document.getElementById("roomInput");
-let toggleMicBtn = document.getElementById("toggleMicBtn");
-let toggleCamBtn = document.getElementById("toggleCamBtn");
-let callStatus = document.getElementById("callStatus");
-
-const rtcConfig = {
-  iceServers: [
-    { urls: 'stun:stun.l.google.com:19302' },
-    { urls: 'stun:stun1.l.google.com:19302' }
-  ]
-};
-
-function updateStatus(text) {
-  callStatus.textContent = "Status: " + text;
-}
-
-// Generate code AND instantly join/wait as creator
-generateCodeBtn.addEventListener("click", async () => {
-  const randomCode = Math.floor(100000 + Math.random() * 900000).toString();
-  roomInput.value = randomCode;
-
-  navigator.clipboard.writeText(randomCode).then(() => {
-    console.log("Code copied to clipboard: " + randomCode);
-  });
-
-  await startMeetingSession(randomCode, true);
-});
-
-// Join an existing meeting using the typed code
-joinRoomBtn.addEventListener("click", async () => {
-  const roomCode = roomInput.value.trim();
-  if (roomCode.length !== 6 || isNaN(roomCode)) {
-    alert("Please enter a valid 6-digit meeting code!");
-    return;
-  }
-  await startMeetingSession(roomCode, false);
-});
-
-async function startMeetingSession(roomCode, creatorFlag) {
-  isCreator = creatorFlag;
-  currentRoom = roomCode;
-
+function verifyPasscode() {
   try {
-    localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-    localVideo.srcObject = localStream;
-    
-    generateCodeBtn.style.display = "none";
-    joinRoomBtn.style.display = "none";
-    leaveRoomBtn.style.display = "inline-block";
-    roomInput.disabled = true;
-    toggleMicBtn.disabled = false;
-    toggleCamBtn.disabled = false;
+    const inputField = document.getElementById("passcodeInput");
+    const overlay = document.getElementById("authOverlay");
+    const content = document.getElementById("mainContent");
+    const errorBox = document.getElementById("errorMsg");
 
-    if (isCreator) {
-      updateStatus(`Code copied! Waiting for peer to enter code ${roomCode}...`);
-    } else {
-      updateStatus("Connecting to code: " + roomCode);
+    if (!inputField || !overlay || !content) {
+      alert("DOM elements missing!");
+      return;
     }
 
-    // Connect to public WebSocket signaling server
-    signalingSocket = new WebSocket('wss://free.blr2.piesocket.com/v3/digital_domination_' + roomCode + '?api_key=VCXCEuvhGcBDP7XnjJJUDvzn1AW1fdSIaNWhZobk&notify_self=0');
+    const inputVal = inputField.value.trim();
 
-    signalingSocket.onopen = () => {
-      console.log("Connected to signaling bridge.");
-      // Signal entry
-      signalingSocket.send(JSON.stringify({ type: 'join', role: isCreator ? 'creator' : 'peer' }));
-    };
-
-    signalingSocket.onmessage = async (event) => {
-      const message = JSON.parse(event.data);
-
-      if (message.type === 'join' && isCreator) {
-        updateStatus("Peer joined! Establishing secure link...");
-        await createPeerConnection();
-        const offer = await peerConnection.createOffer();
-        await peerConnection.setLocalDescription(offer);
-        signalingSocket.send(JSON.stringify({ type: 'offer', offer: offer }));
-      } 
-      else if (message.type === 'offer' && !isCreator) {
-        updateStatus("Received connection offer...");
-        await createPeerConnection();
-        await peerConnection.setRemoteDescription(new RTCSessionDescription(message.offer));
-        const answer = await peerConnection.createAnswer();
-        await peerConnection.setLocalDescription(answer);
-        signalingSocket.send(JSON.stringify({ type: 'answer', answer: answer }));
-      } 
-      else if (message.type === 'answer' && isCreator) {
-        await peerConnection.setRemoteDescription(new RTCSessionDescription(message.answer));
-      } 
-      else if (message.type === 'candidate') {
-        if (peerConnection) {
-          try {
-            await peerConnection.addIceCandidate(new RTCIceCandidate(message.candidate));
-          } catch (e) {
-            console.error("Error adding ice candidate", e);
-          }
-        }
-      }
-    };
-
+    if (inputVal === correctPasscode) {
+      overlay.style.display = "none";
+      content.style.display = "block";
+    } else {
+      errorBox.style.display = "block";
+      inputField.style.borderColor = "#ef4444";
+      inputField.value = "";
+      inputField.focus();
+    }
   } catch (err) {
-    console.error("Error starting call.", err);
-    updateStatus("Failed to access camera/mic.");
+    alert("Passcode error: " + err.message);
   }
 }
 
-async function createPeerConnection() {
-  if (peerConnection) return;
+window.addEventListener("DOMContentLoaded", () => {
+  const btn = document.getElementById("authBtn");
+  const input = document.getElementById("passcodeInput");
 
-  peerConnection = new RTCPeerConnection(rtcConfig);
+  if (btn) btn.onclick = verifyPasscode;
+  if (input) {
+    input.focus();
+    input.onkeydown = (e) => {
+      if (e.key === "Enter") verifyPasscode();
+    };
+  }
+});
 
-  localStream.getTracks().forEach(track => {
-    peerConnection.addTrack(track, localStream);
+// --- WEBSITE MENU & SCRIPT DRAWERS ---
+window.addEventListener("DOMContentLoaded", () => {
+  const menuBtn = document.getElementById("menuBtn");
+  if (menuBtn) {
+    menuBtn.onclick = () => {
+      document.getElementById("nav").classList.toggle("active");
+    };
+  }
+
+  document.querySelectorAll(".more-btn").forEach(button => {
+    button.onclick = () => {
+      const card = button.closest(".script");
+      const drawer = card.querySelector(".code-drawer");
+      drawer.classList.toggle("open");
+      button.textContent = drawer.classList.contains("open") ? "Less" : "More";
+    };
   });
 
-  peerConnection.onicecandidate = (event) => {
-    if (event.candidate && signalingSocket && signalingSocket.readyState === WebSocket.OPEN) {
-      signalingSocket.send(JSON.stringify({ type: 'candidate', candidate: event.candidate }));
-    }
-  };
+  document.querySelectorAll(".copy-btn").forEach(button => {
+    button.onclick = () => {
+      const text = button.getAttribute("data-script");
+      navigator.clipboard.writeText(text).then(() => {
+        button.textContent = "Copied!";
+        setTimeout(() => button.textContent = "Copy", 2000);
+      });
+    };
+  });
 
-  peerConnection.ontrack = (event) => {
-    if (event.streams && event.streams[0]) {
-      remoteVideo.srcObject = event.streams[0];
-      updateStatus("Connected! Live video active.");
-    }
-  };
-
-  peerConnection.onconnectionstatechange = () => {
-    if (peerConnection.connectionState === 'disconnected' || peerConnection.connectionState === 'failed') {
-      updateStatus("Peer disconnected.");
-      remoteVideo.srcObject = null;
-    }
-  };
-}
-
-leaveRoomBtn.addEventListener("click", () => {
-  cleanupCall();
-  updateStatus("Disconnected.");
-});
-
-function cleanupCall() {
-  if (localStream) {
-    localStream.getTracks().forEach(track => track.stop());
-    localStream = null;
-  }
-  if (peerConnection) {
-    peerConnection.close();
-    peerConnection = null;
-  }
-  if (signalingSocket) {
-    signalingSocket.close();
-    signalingSocket = null;
-  }
-  localVideo.srcObject = null;
-  remoteVideo.srcObject = null;
-
-  generateCodeBtn.style.display = "inline-block";
-  joinRoomBtn.style.display = "inline-block";
-  leaveRoomBtn.style.display = "none";
-  roomInput.disabled = false;
-  roomInput.value = "";
-  toggleMicBtn.disabled = true;
-  toggleCamBtn.disabled = true;
-  toggleMicBtn.textContent = "Mute Mic";
-  toggleCamBtn.textContent = "Turn Off Camera";
-  isCreator = false;
-}
-
-toggleMicBtn.addEventListener("click", () => {
-  if (!localStream) return;
-  const audioTrack = localStream.getAudioTracks()[0];
-  if (audioTrack) {
-    audioTrack.enabled = !audioTrack.enabled;
-    toggleMicBtn.textContent = audioTrack.enabled ? "Mute Mic" : "Unmute Mic";
-  }
-});
-
-toggleCamBtn.addEventListener("click", () => {
-  if (!localStream) return;
-  const videoTrack = localStream.getVideoTracks()[0];
-  if (videoTrack) {
-    videoTrack.enabled = !videoTrack.enabled;
-    toggleCamBtn.textContent = videoTrack.enabled ? "Turn Off Camera" : "Turn On Camera";
+  const aboutMoreBtn = document.getElementById("aboutMoreBtn");
+  const aboutDrawer = document.getElementById("aboutDrawer");
+  if (aboutMoreBtn && aboutDrawer) {
+    aboutMoreBtn.onclick = () => {
+      aboutDrawer.classList.toggle("open");
+      aboutMoreBtn.textContent = aboutDrawer.classList.contains("open") ? "Less" : "More";
+    };
   }
 });
 </script>
