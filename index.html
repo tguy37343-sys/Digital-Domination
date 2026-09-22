@@ -505,10 +505,11 @@ aboutMoreBtn.addEventListener("click", () => {
   aboutMoreBtn.textContent = aboutDrawer.classList.contains("open") ? "Less" : "More";
 });
 
-// --- 6-DIGIT CODE WEBRTC VIDEO CALL SYSTEM ---
+// --- 6-DIGIT CODE WEBRTC VIDEO CALL SYSTEM (WITH WEBSOCKET SIGNALING) ---
 let localStream = null;
 let peerConnection = null;
-let signalingChannel = null;
+let signalingSocket = null;
+let currentRoom = null;
 let isCreator = false;
 
 let localVideo = document.getElementById("localVideo");
@@ -556,6 +557,7 @@ joinRoomBtn.addEventListener("click", async () => {
 
 async function startMeetingSession(roomCode, creatorFlag) {
   isCreator = creatorFlag;
+  currentRoom = roomCode;
 
   try {
     localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
@@ -569,31 +571,37 @@ async function startMeetingSession(roomCode, creatorFlag) {
     toggleCamBtn.disabled = false;
 
     if (isCreator) {
-      updateStatus(`Code generated & copied! Waiting for peer to join room ${roomCode}...`);
+      updateStatus(`Code copied! Waiting for peer to enter code ${roomCode}...`);
     } else {
-      updateStatus("Connecting to meeting code: " + roomCode);
+      updateStatus("Connecting to code: " + roomCode);
     }
 
-    // Setup signaling channel for this specific 6-digit code
-    signalingChannel = new BroadcastChannel('dd_code_meeting_' + roomCode);
+    // Connect to public WebSocket signaling server
+    signalingSocket = new WebSocket('wss://free.blr2.piesocket.com/v3/digital_domination_' + roomCode + '?api_key=VCXCEuvhGcBDP7XnjJJUDvzn1AW1fdSIaNWhZobk&notify_self=0');
 
-    signalingChannel.onmessage = async (event) => {
-      const message = event.data;
+    signalingSocket.onopen = () => {
+      console.log("Connected to signaling bridge.");
+      // Signal entry
+      signalingSocket.send(JSON.stringify({ type: 'join', role: isCreator ? 'creator' : 'peer' }));
+    };
+
+    signalingSocket.onmessage = async (event) => {
+      const message = JSON.parse(event.data);
 
       if (message.type === 'join' && isCreator) {
-        updateStatus("Peer joined! Connecting...");
+        updateStatus("Peer joined! Establishing secure link...");
         await createPeerConnection();
         const offer = await peerConnection.createOffer();
         await peerConnection.setLocalDescription(offer);
-        signalingChannel.postMessage({ type: 'offer', offer: offer });
+        signalingSocket.send(JSON.stringify({ type: 'offer', offer: offer }));
       } 
       else if (message.type === 'offer' && !isCreator) {
-        updateStatus("Received offer, connecting...");
+        updateStatus("Received connection offer...");
         await createPeerConnection();
         await peerConnection.setRemoteDescription(new RTCSessionDescription(message.offer));
         const answer = await peerConnection.createAnswer();
         await peerConnection.setLocalDescription(answer);
-        signalingChannel.postMessage({ type: 'answer', answer: answer });
+        signalingSocket.send(JSON.stringify({ type: 'answer', answer: answer }));
       } 
       else if (message.type === 'answer' && isCreator) {
         await peerConnection.setRemoteDescription(new RTCSessionDescription(message.answer));
@@ -608,14 +616,6 @@ async function startMeetingSession(roomCode, creatorFlag) {
         }
       }
     };
-
-    // If we are the creator, announce our presence so the joining peer knows we're waiting
-    if (isCreator) {
-      signalingChannel.postMessage({ type: 'join' });
-    } else {
-      // If we are joining an existing creator, send a join signal to trigger their offer
-      signalingChannel.postMessage({ type: 'join' });
-    }
 
   } catch (err) {
     console.error("Error starting call.", err);
@@ -633,8 +633,8 @@ async function createPeerConnection() {
   });
 
   peerConnection.onicecandidate = (event) => {
-    if (event.candidate && signalingChannel) {
-      signalingChannel.postMessage({ type: 'candidate', candidate: event.candidate });
+    if (event.candidate && signalingSocket && signalingSocket.readyState === WebSocket.OPEN) {
+      signalingSocket.send(JSON.stringify({ type: 'candidate', candidate: event.candidate }));
     }
   };
 
@@ -667,9 +667,9 @@ function cleanupCall() {
     peerConnection.close();
     peerConnection = null;
   }
-  if (signalingChannel) {
-    signalingChannel.close();
-    signalingChannel = null;
+  if (signalingSocket) {
+    signalingSocket.close();
+    signalingSocket = null;
   }
   localVideo.srcObject = null;
   remoteVideo.srcObject = null;
@@ -707,4 +707,3 @@ toggleCamBtn.addEventListener("click", () => {
 
 </body>
 </html>
- 
