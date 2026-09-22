@@ -6,14 +6,14 @@
 <title>Digital Domination</title>
 <style>
 :root{
-  --bg:#0c120f;
-  --glass:rgba(22, 36, 29, 0.55);
-  --glass2:rgba(30, 48, 38, 0.7);
-  --border:rgba(110, 153, 128, 0.18);
-  --text:#e4ede7;
-  --muted:#8fa196;
-  --accent:#79a888;
-  --accent-light:#a3c4b0;
+  --bg:#09090b;
+  --glass:rgba(24, 24, 27, 0.6);
+  --glass2:rgba(39, 39, 42, 0.7);
+  --border:rgba(255, 255, 255, 0.1);
+  --text:#f4f4f5;
+  --muted:#a1a1aa;
+  --accent:#ffffff;
+  --accent-light:#e4e4e7;
   --radius:24px;
   --max:1150px;
 }
@@ -23,8 +23,8 @@ body{
   font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   color:var(--text);
   background:
-    radial-gradient(circle at 10% 15%,rgba(37, 61, 47, 0.4),transparent 40%), 
-    radial-gradient(circle at 90% 85%,rgba(20, 38, 29, 0.5),transparent 40%), 
+    radial-gradient(circle at 10% 15%,rgba(39, 39, 42, 0.3),transparent 40%), 
+    radial-gradient(circle at 90% 85%,rgba(24, 24, 27, 0.4),transparent 40%), 
     var(--bg);
   min-height:100vh;
 }
@@ -40,7 +40,7 @@ a{text-decoration:none;color:inherit}
   width:min(94%,var(--max));padding:14px 24px;border-radius:18px;
   display:flex;justify-content:space-between;align-items:center;
 }
-.logo{font-weight:800;letter-spacing:0.5px;color:var(--accent-light);font-size:15px;}
+.logo{font-weight:800;letter-spacing:0.5px;color:var(--text);font-size:15px;}
 nav{display:flex;gap:25px;}
 nav a{color:var(--muted);font-size:13px;font-weight:500;transition:.2s;}
 nav a:hover{color:var(--text)}
@@ -51,35 +51,36 @@ nav a:hover{color:var(--text)}
 }
 .badge{
   display:inline-block;padding:8px 16px;border-radius:30px;
-  background:rgba(121, 168, 136, 0.1);border:1px solid rgba(121, 168, 136, 0.2);
-  color:var(--accent-light);font-size:11px;font-weight:600;letter-spacing:1.5px;
+  background:rgba(255, 255, 255, 0.05);border:1px solid rgba(255, 255, 255, 0.1);
+  color:var(--muted);font-size:11px;font-weight:600;letter-spacing:1.5px;
 }
 h1{margin-top:20px;font-size:clamp(40px,6vw,76px);line-height:1.05;font-weight:800;letter-spacing:-1px;}
-.gradient{color:transparent;background:linear-gradient(135deg,#c2e8d3,#79a888);background-clip:text;-webkit-background-clip:text;}
+.gradient{color:transparent;background:linear-gradient(135deg,#ffffff,#71717a);background-clip:text;-webkit-background-clip:text;}
 .buttons{display:flex;gap:12px;margin-top:30px;flex-wrap:wrap;}
 .btn{border:1px solid var(--border);border-radius:14px;padding:12px 22px;font-weight:600;font-size:14px;cursor:pointer;transition:.2s;}
-.btn:hover{background:var(--glass2);border-color:rgba(110, 153, 128, 0.3);}
-.primary{background:linear-gradient(135deg,#79a888,#5b856b);border:0;color:#0c120f;}
+.btn:hover{background:var(--glass2);border-color:rgba(255, 255, 255, 0.2);}
+.primary{background:#f4f4f5;border:0;color:#09090b;}
+.primary:hover{background:#e4e4e7;}
 .section{max-width:var(--max);margin:auto;padding:80px 25px;}
 .heading{text-align:center;margin-bottom:45px;}
-.heading span{color:var(--accent);font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;}
+.heading span{color:var(--muted);font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;}
 .heading h2{margin-top:6px;font-size:36px;font-weight:700;}
 .rank-grid, .script-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;}
 .script-grid{grid-template-columns:repeat(3,1fr);}
 .rank, .script, .about-box{padding:28px;border-radius:var(--radius);transition:.2s;}
-.rank:hover, .script:hover{border-color:rgba(110, 153, 128, 0.35);transform:translateY(-2px);}
+.rank:hover, .script:hover{border-color:rgba(255, 255, 255, 0.2);transform:translateY(-2px);}
 .rank h3, .script h3{margin-top:8px;font-size:18px;font-weight:600;}
 .rank p, .script p, .about-box p{margin-top:8px;color:var(--muted);font-size:13.5px;line-height:1.5;}
 .names{margin-top:14px;display:flex;flex-wrap:wrap;gap:6px;}
-.name{padding:5px 10px;border-radius:8px;background:rgba(121, 168, 136, 0.08);border:1px solid rgba(121, 168, 136, 0.15);font-size:12px;color:var(--accent-light);font-weight:500;}
+.name{padding:5px 10px;border-radius:8px;background:rgba(255, 255, 255, 0.05);border:1px solid rgba(255, 255, 255, 0.1);font-size:12px;color:var(--muted);font-weight:500;}
 
 /* True Liquid Glass Dropdown Containers */
 .code-drawer, .about-drawer{
   display:none;
   position:relative;
   overflow:hidden;
-  background: linear-gradient(135deg, rgba(28, 48, 36, 0.65), rgba(14, 25, 19, 0.75));
-  border: 1px solid rgba(142, 196, 163, 0.28);
+  background: linear-gradient(135deg, rgba(39, 39, 42, 0.65), rgba(24, 24, 27, 0.75));
+  border: 1px solid rgba(255, 255, 255, 0.15);
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37), inset 0 1px 1px 0 rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
@@ -98,15 +99,15 @@ h1{margin-top:20px;font-size:clamp(40px,6vw,76px);line-height:1.05;font-weight:8
 }
 
 .code-drawer.open, .about-drawer.open{display:block;}
-.code-box{font-family:monospace;font-size:11px;color:#a3c4b0;word-break:break-all;position:relative;z-index:1;}
+.code-box{font-family:monospace;font-size:11px;color:#d4d4d8;word-break:break-all;position:relative;z-index:1;}
 .script-actions{display:flex;gap:8px;margin-top:16px;}
 .script-actions .btn{flex:1;font-size:12px;padding:10px;text-align:center;}
-.about-drawer h4{font-size:13px;color:var(--accent-light);margin-bottom:6px;font-weight:600;position:relative;z-index:1;}
-.about-drawer p{color:var(--text);font-size:13px;line-height:1.5;position:relative;z-index:1;}
+.about-drawer h4{font-size:13px;color:var(--text);margin-bottom:6px;font-weight:600;position:relative;z-index:1;}
+.about-drawer p{color:var(--muted);font-size:13px;line-height:1.5;position:relative;z-index:1;}
 footer{margin-top:40px;padding:30px;border-top:1px solid var(--border);text-align:center;color:var(--muted);font-size:13px;}
 
 @media(max-width:800px){
-  nav{display:none;position:absolute;top:70px;left:16px;right:16px;padding:16px;flex-direction:column;background:#101813;border-radius:16px;border:1px solid var(--border);}
+  nav{display:none;position:absolute;top:70px;left:16px;right:16px;padding:16px;flex-direction:column;background:#18181b;border-radius:16px;border:1px solid var(--border);}
   nav.active{display:flex;}
   .menu-btn{display:block;}
   .hero{grid-template-columns:1fr;padding-top:120px;}
@@ -277,3 +278,4 @@ aboutMoreBtn.addEventListener("click", () => {
 
 </body>
 </html>
+O
