@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Digital Domination - Script Hub</title>
-<!-- Import matching futuristic font -->
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
 
 <style>
@@ -17,18 +16,10 @@
   --muted:#a1a1aa;
   --radius:24px;
   --max:1150px;
-  --transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease, border-color 0.3s ease;
+  --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-  -webkit-tap-highlight-color: transparent; /* Removes mobile click highlight square */
-}
-/* Removes default focus outlines/orange boxes across browsers */
-*:focus, *:focus-visible {
-  outline: none !important;
-}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+*:focus, *:focus-visible {outline: none !important;}
 
 html{scroll-behavior:smooth}
 body{
@@ -40,7 +31,20 @@ body{
     var(--bg);
   min-height:100vh;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 15px rgba(255,255,255,0.05); }
+  50% { box-shadow: 0 0 25px rgba(255,255,255,0.15); }
+}
+
 .glass{
   background:var(--glass);
   border:1px solid var(--border);
@@ -52,241 +56,186 @@ a{text-decoration:none;color:inherit}
 /* Security Passcode Overlay */
 #authOverlay{
   position:fixed;top:0;left:0;width:100vw;height:100vh;
-  background:rgba(9, 9, 11, 0.98);
+  background:rgba(9, 9, 11, 0.95);
   backdrop-filter:blur(30px);
   -webkit-backdrop-filter:blur(30px);
   z-index:99999;
   display:flex;justify-content:center;align-items:center;
   padding:20px;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
-  will-change: opacity;
-}
-#authOverlay.hidden{
-  opacity:0;
-  visibility:hidden;
-  pointer-events:none;
+  animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .auth-box{
   width:100%;max-width:400px;padding:36px;border-radius:var(--radius);
-  text-align:center;box-shadow:0 20px 40px rgba(0,0,0,0.6);
-  transform: translate3d(0, 0, 0);
-  animation: floatIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  text-align:center;box-shadow:0 30px 60px rgba(0,0,0,0.8);
+  animation: pulseGlow 4s infinite ease-in-out;
 }
-@keyframes floatIn {
-  from { transform: translate3d(0, 20px, 0); opacity: 0; }
-  to { transform: translate3d(0, 0, 0); opacity: 1; }
-}
-.auth-box h2{font-size:24px;font-weight:700;margin-bottom:8px;}
+.auth-box h2{font-size:24px;font-weight:700;margin-bottom:8px;letter-spacing:0.5px;}
 .auth-box p{color:var(--muted);font-size:13.5px;margin-bottom:24px;}
 .auth-input{
   width:100%;padding:14px 16px;border-radius:14px;border:1px solid var(--border);
-  background:rgba(255,255,255,0.05);color:var(--text);font-size:16px;
+  background:rgba(255,255,255,0.03);color:var(--text);font-size:16px;
   text-align:center;letter-spacing:1px;outline:none;transition:var(--transition);margin-bottom:14px;
 }
-.auth-input:focus{border-color:rgba(255,255,255,0.3);background:rgba(255,255,255,0.08);}
+.auth-input:focus{border-color:rgba(255,255,255,0.4);background:rgba(255,255,255,0.07);box-shadow:0 0 15px rgba(255,255,255,0.1);}
 .auth-btn{
   width:100%;padding:14px;border-radius:14px;background:#f4f4f5;border:0;
   color:#09090b;font-weight:600;font-size:14px;cursor:pointer;transition:var(--transition);
-  will-change: transform;
 }
-.auth-btn:hover{background:#e4e4e7;transform:translate3d(0, -2px, 0);}
-.error-msg{color:#ef4444;font-size:12px;margin-top:10px;display:none;}
+.auth-btn:hover{background:#ffffff;transform:translateY(-2px);box-shadow:0 5px 20px rgba(255,255,255,0.2);}
+.error-msg{color:#ef4444;font-size:12px;margin-top:10px;display:none;animation: fadeIn 0.3s ease;}
 
 /* Main Site Content */
-#mainContent{display:none;}
-#mainContent.visible{display:block;}
+#mainContent{display:none; animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);}
 
 .navbar{
-  position:fixed;z-index:1000;top:16px;left:50%;transform:translateX(-50%) translate3d(0,0,0);
+  position:fixed;z-index:1000;top:16px;left:50%;transform:translateX(-50%);
   width:min(94%,var(--max));padding:14px 24px;border-radius:18px;
   display:flex;justify-content:space-between;align-items:center;
   box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  transition: var(--transition);
 }
 .logo-area{display:flex;align-items:center;gap:12px;}
 .logo{font-weight:800;letter-spacing:0.5px;color:var(--text);font-size:15px;transition:var(--transition);}
 .logo:hover{opacity:0.8;}
-
 .status-badge{
   display:flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;
   background:rgba(255,255,255,0.03);border:1px solid var(--border);
   font-size:11px;color:var(--muted);font-weight:500;
 }
-.status-dot{
-  width:6px;height:6px;background:#22c55e;border-radius:50%;
-  box-shadow:0 0 8px #22c55e;
-  animation:pulse 2s infinite;
-}
-@keyframes pulse{
-  0%{transform:scale(0.95);opacity:0.8;}
-  50%{transform:scale(1.2);opacity:1;}
-  100%{transform:scale(0.95);opacity:0.8;}
-}
+.status-dot{width:6px;height:6px;background:#22c55e;border-radius:50%;box-shadow:0 0 8px #22c55e;}
 
 nav{display:flex;gap:25px;align-items:center;}
-nav a{color:var(--muted);font-size:13px;font-weight:500;transition:var(--transition);will-change: transform;}
-nav a:hover{color:var(--text);transform:translate3d(0, -1px, 0);}
+nav a{color:var(--muted);font-size:13px;font-weight:500;transition:var(--transition);position:relative;}
+nav a::after{
+  content:'';position:absolute;width:0;height:1px;bottom:-3px;left:0;
+  background:var(--text);transition:width 0.3s ease;
+}
+nav a:hover{color:var(--text);}
+nav a:hover::after{width:100%;}
 .menu-btn{display:none;border:0;background:none;color:var(--text);font-size:22px;cursor:pointer;}
 
 .hero{
-  max-width:var(--max);min-height:100vh;margin:auto;padding:150px 25px 80px;
+  max-width:var(--max);min-height:90vh;margin:auto;padding:150px 25px 60px;
   display:grid;grid-template-columns:1.2fr .8fr;gap:50px;align-items:center;
 }
-
-.hero-logo-graphic{
-  margin-bottom: 24px;
-  display: flex;
-  align-items: center;
-  animation: floatLogo 4s ease-in-out infinite;
-  will-change: transform;
-}
-@keyframes floatLogo {
-  0%, 100% { transform: translate3d(0, 0, 0); }
-  50% { transform: translate3d(0, -6px, 0); }
-}
-
 .badge{
   display:inline-block;padding:8px 16px;border-radius:30px;
-  background:rgba(255, 255, 255, 0.05);border:1px solid rgba(255, 255, 255, 0.1);
+  background:rgba(255, 255, 255, 0.03);border:1px solid rgba(255, 255, 255, 0.08);
   color:var(--muted);font-size:11px;font-weight:600;letter-spacing:1.5px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
 }
-
 h1{
-  margin-top:20px;
-  font-family: 'Orbitron', sans-serif;
-  font-size:clamp(36px, 5.5vw, 68px);
-  line-height:1.1;
-  font-weight:900;
-  letter-spacing:1px;
+  margin-top:20px;font-family:'Orbitron',sans-serif;
+  font-size:clamp(36px,5.5vw,68px);line-height:1.1;font-weight:900;letter-spacing:1px;
 }
 .gradient{
   color:transparent;
-  background:linear-gradient(135deg,#ffffff,#71717a);
-  background-clip:text;
-  -webkit-background-clip:text;
+  background:linear-gradient(135deg,#ffffff 30%,#71717a 100%);
+  background-clip:text;-webkit-background-clip:text;
 }
-
 .buttons{display:flex;gap:12px;margin-top:30px;flex-wrap:wrap;}
 .btn{
   border:1px solid var(--border);border-radius:14px;padding:12px 22px;
   font-weight:600;font-size:14px;cursor:pointer;transition:var(--transition);
   display:inline-block;text-align:center;
-  will-change: transform;
 }
-.btn:hover{background:var(--glass2);border-color:rgba(255, 255, 255, 0.25);transform:translate3d(0, -2px, 0);}
+.btn:hover{background:var(--glass2);border-color:rgba(255,255,255,0.3);transform:translateY(-3px);box-shadow:0 10px 25px rgba(0,0,0,0.4);}
 .primary{background:#f4f4f5;border:0;color:#09090b;}
-.primary:hover{background:#e4e4e7;transform:translate3d(0, -2px, 0);}
+.primary:hover{background:#ffffff;transform:translateY(-3px);box-shadow:0 10px 25px rgba(255,255,255,0.15);}
 
 .section{max-width:var(--max);margin:auto;padding:80px 25px;}
 .heading{text-align:center;margin-bottom:45px;}
 .heading span{color:var(--muted);font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;}
-.heading h2{margin-top:6px;font-size:36px;font-weight:700;}
+.heading h2{margin-top:6px;font-size:36px;font-weight:700;letter-spacing:-0.5px;}
 
-.rank-grid, .script-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;}
-.script-grid{grid-template-columns:repeat(3,1fr);}
-.rank, .script, .about-box{
-  padding:28px;border-radius:var(--radius);
-  transition: var(--transition);
-  will-change: transform;
+.rank-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.rank, .about-box{padding:28px;border-radius:var(--radius);transition:var(--transition);position:relative;overflow:hidden;}
+.rank:hover, .about-box:hover{
+  border-color:rgba(255,255,255,0.25);
+  transform:translateY(-5px);
+  box-shadow:0 20px 40px rgba(0,0,0,0.5);
+  background:rgba(24, 24, 27, 0.8);
 }
-.rank:hover, .script:hover, .about-box:hover{
-  border-color:rgba(255, 255, 255, 0.25);
-  transform:translate3d(0, -4px, 0);
-  box-shadow: 0 12px 30px rgba(0,0,0,0.4);
-}
-.rank h3, .script h3{margin-top:8px;font-size:18px;font-weight:600;}
-.rank p, .script p, .about-box p{margin-top:8px;color:var(--muted);font-size:13.5px;line-height:1.5;}
+.rank h3{margin-top:8px;font-size:18px;font-weight:600;}
+.rank p, .about-box p{margin-top:8px;color:var(--muted);font-size:13.5px;line-height:1.5;}
 .names{margin-top:14px;display:flex;flex-wrap:wrap;gap:6px;}
 .name{
-  padding:5px 10px;border-radius:8px;background:rgba(255, 255, 255, 0.05);
-  border:1px solid rgba(255, 255, 255, 0.1);font-size:12px;color:var(--muted);font-weight:500;
-  transition: var(--transition);
-  will-change: transform;
+  padding:5px 10px;border-radius:8px;background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.08);font-size:12px;color:var(--muted);
+  transition:var(--transition);
 }
-.name:hover{background:rgba(255,255,255,0.1);color:var(--text);transform:scale(1.03);}
+.name:hover{color:var(--text);border-color:rgba(255,255,255,0.2);background:rgba(255,255,255,0.06);}
 
-/* 60 FPS Layout-Free Grid Drawer Animations */
+/* Search Box */
+.sb-search-box {display:flex;gap:12px;margin-bottom:30px;}
+.sb-input {
+  flex:1;padding:14px 18px;border-radius:14px;border:1px solid var(--border);
+  background:rgba(255,255,255,0.03);color:var(--text);font-size:14px;outline:none;
+  transition:var(--transition);
+}
+.sb-input:focus {border-color:rgba(255,255,255,0.3);background:rgba(255,255,255,0.06);box-shadow:0 0 15px rgba(255,255,255,0.05);}
+.sb-grid {display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.sb-card {
+  padding:22px;border-radius:var(--radius);display:flex;flex-direction:column;justify-content:space-between;
+  transition:var(--transition);
+}
+.sb-card:hover{
+  border-color:rgba(255,255,255,0.25);
+  transform:translateY(-5px);
+  box-shadow:0 20px 40px rgba(0,0,0,0.5);
+  background:rgba(24, 24, 27, 0.8);
+}
+.sb-card-top {display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.sb-game-img {width:42px;height:42px;border-radius:10px;object-fit:cover;background:rgba(255,255,255,0.03);border:1px solid var(--border);}
+.sb-game-info h4 {font-size:14px;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.sb-game-info span {font-size:11px;color:var(--muted);}
+.sb-script-title {font-size:16px;font-weight:700;margin-bottom:6px;letter-spacing:-0.2px;}
+.sb-tags {display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;}
+.sb-tag {font-size:10px;padding:3px 8px;border-radius:6px;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--muted);}
+.sb-loading, .sb-empty {grid-column:1/-1;text-align:center;padding:40px;color:var(--muted);font-size:14px;}
+
+/* Drawers */
 .code-drawer, .about-drawer {
-  display: grid;
-  grid-template-rows: 0fr;
-  opacity: 0;
-  transition: grid-template-rows 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, margin-top 0.35s ease;
-  background: linear-gradient(135deg, rgba(39, 39, 42, 0.65), rgba(24, 24, 27, 0.75));
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border-radius: 16px;
-  margin-top: 0;
-  will-change: grid-template-rows, opacity;
+  max-height:0;overflow:hidden;transition:max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), margin-top 0.4s ease, opacity 0.3s ease;
+  background:rgba(39,39,42,0.4);border:1px solid rgba(255,255,255,0.05);
+  border-radius:12px;margin-top:0;opacity:0;
 }
-
-.code-drawer.open, .about-drawer.open {
-  grid-template-rows: 1fr;
-  opacity: 1;
-  margin-top: 14px;
-}
-
-.drawer-inner {
-  overflow: hidden;
-  padding: 0 16px;
-  transition: padding 0.35s ease;
-}
-
-.code-drawer.open .drawer-inner, .about-drawer.open .drawer-inner {
-  padding: 16px;
-}
-
-.code-box{font-family:monospace;font-size:11px;color:#d4d4d8;word-break:break-all;position:relative;z-index:1;}
+.code-drawer.open, .about-drawer.open {max-height:220px;margin-top:14px;padding:14px;opacity:1;border-color:rgba(255,255,255,0.15);}
+.code-box{font-family:monospace;font-size:11px;color:#d4d4d8;word-break:break-all;}
 .script-actions{display:flex;gap:8px;margin-top:16px;}
 .script-actions .btn{flex:1;font-size:12px;padding:10px;}
-.about-drawer h4{font-size:13px;color:var(--text);margin-bottom:6px;font-weight:600;}
-.about-drawer p{color:var(--muted);font-size:13px;line-height:1.5;}
 
 footer{margin-top:40px;padding:30px;border-top:1px solid var(--border);text-align:center;color:var(--muted);font-size:13px;}
 
-@media(max-width:800px){
-  nav{
-    display:flex;flex-direction:column;position:absolute;top:70px;left:16px;right:16px;
-    padding:0 16px;background:rgba(24, 24, 27, 0.95);border-radius:16px;
-    border:1px solid var(--border);backdrop-filter:blur(20px);
-    display: grid;
-    grid-template-rows: 0fr;
-    opacity: 0;
-    overflow: hidden;
-    transition: grid-template-rows 0.35s ease, opacity 0.3s ease, padding 0.35s ease;
-    will-change: grid-template-rows, opacity;
-  }
+@media(max-width:900px){
+  .sb-grid, .rank-grid{grid-template-columns:1fr;}
+  .hero{grid-template-columns:1fr;padding-top:120px;}
+  nav{display:none;}
   nav.active{
-    grid-template-rows: 1fr;
-    opacity: 1;
-    padding: 20px 16px;
-  }
-  .nav-inner {
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+    display:flex;flex-direction:column;position:absolute;top:70px;left:16px;right:16px;
+    background:rgba(24,24,27,0.95);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);
+    padding:20px;border-radius:16px;border:1px solid var(--border);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+    animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .menu-btn{display:block;}
-  .hero{grid-template-columns:1fr;padding-top:120px;}
-  .rank-grid, .script-grid{grid-template-columns:1fr;}
 }
 </style>
 </head>
 <body>
 
-<!-- Security Passcode Overlay Screen -->
+<!-- Security Passcode Overlay -->
 <div id="authOverlay">
   <div class="auth-box glass">
     <h2>Access Restricted</h2>
     <p>Enter the security passcode to view Digital Domination.</p>
-    <input type="text" id="passcodeInput" class="auth-input" placeholder="Enter passcode" maxlength="30" autocomplete="off" />
-    <button id="authBtn" class="auth-btn">Unlock Access</button>
+    <input type="text" id="passcodeInput" class="auth-input" placeholder="Enter passcode" autocomplete="off" />
+    <button onclick="unlockApp()" class="auth-btn">Unlock Access</button>
     <div id="errorMsg" class="error-msg">Incorrect passcode. Access denied.</div>
   </div>
 </div>
 
-<!-- Website Content Container -->
+<!-- Main Site Content -->
 <div id="mainContent">
   <header class="navbar glass">
     <div class="logo-area">
@@ -296,34 +245,39 @@ footer{margin-top:40px;padding:30px;border-top:1px solid var(--border);text-alig
         <span>Online</span>
       </div>
     </div>
-    <button class="menu-btn" id="menuBtn">☰</button>
+    <button class="menu-btn" onclick="toggleMenu()">☰</button>
     <nav id="nav">
-      <div class="nav-inner">
-        <a href="#home">Home</a>
-        <a href="#ranks">Ranks</a>
-        <a href="#scripts">Scripts</a>
-        <a href="#about">About</a>
-      </div>
+      <a href="#home">Home</a>
+      <a href="#explorer">SumireX Hub</a>
+      <a href="#ranks">Ranks</a>
+      <a href="#about">About</a>
     </nav>
   </header>
 
   <main>
     <section id="home" class="hero">
       <div>
-        <!-- Borderless Logo Graphic -->
-        <div class="hero-logo-graphic">
-          <svg width="110" height="55" viewBox="0 0 110 55" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <polygon points="2,52 46,52 24,6" fill="#d4d4d8"/>
-            <polygon points="64,6 108,6 86,52" fill="#d4d4d8"/>
-          </svg>
-        </div>
-
         <span class="badge">ROBLOX SCRIPTING</span>
         <h1>DIGITAL<br><span class="gradient">DOMINATION</span></h1>
         <div class="buttons">
-          <a href="#ranks" class="btn primary">View Ranks</a>
-          <a href="#scripts" class="btn glass">Browse Scripts</a>
+          <a href="#explorer" class="btn primary">Browse SumireX</a>
+          <a href="#ranks" class="btn glass">View Ranks</a>
         </div>
+      </div>
+    </section>
+
+    <!-- SumireX Live API Explorer Section -->
+    <section id="explorer" class="section">
+      <div class="heading">
+        <span>LIVE DATABASE</span>
+        <h2>SumireX Explorer</h2>
+      </div>
+      <div class="sb-search-box">
+        <input type="text" id="sbSearchInput" class="sb-input" placeholder="Search scripts..." autocomplete="off" />
+        <button onclick="searchScriptBlox()" class="btn primary">Search</button>
+      </div>
+      <div id="sbResultsGrid" class="sb-grid">
+        <div class="sb-loading">Loading scripts from SumireX...</div>
       </div>
     </section>
 
@@ -336,15 +290,15 @@ footer{margin-top:40px;padding:30px;border-top:1px solid var(--border);text-alig
         <div class="rank glass">
           <h3>Owners</h3>
           <div class="names">
-            <span class="name">Lolfdjdvg</span>
-            <span class="name">PHANTOM965685</span>
+            <span class="name">Not_Sprite</span>
+            <span class="name">JustaDorito</span>
           </div>
         </div>
         <div class="rank glass">
           <h3>Admins</h3>
           <div class="names">
-            <span class="name">Friendly Hacker</span>
             <span class="name">Sam</span>
+            <span class="name">Friendly Hacker</span>
             <span class="name">Mark</span>
           </div>
         </div>
@@ -352,64 +306,7 @@ footer{margin-top:40px;padding:30px;border-top:1px solid var(--border);text-alig
           <h3>Developers</h3>
           <div class="names">
             <span class="name">Coilis</span>
-            <span class="name">R00tkid</span>
-          </div>
-        </div>
-        <div class="rank glass">
-          <h3>Members</h3>
-          <div class="names">
             <span class="name">Alien</span>
-            <span class="name">LEGO</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="scripts" class="section">
-      <div class="heading">
-        <span>LIBRARY</span>
-        <h2>Scripts</h2>
-      </div>
-      <div class="script-grid">
-        <div class="script glass">
-          <h3>Gelatek Hub</h3>
-          <p>Main script hub.</p>
-          <div class="code-drawer">
-            <div class="drawer-inner">
-              <div class="code-box">loadstring(game:HttpGet("https://raw.githubusercontent.com/Gelatekussy/GelatekHub/main/Main.lua"))()</div>
-            </div>
-          </div>
-          <div class="script-actions">
-            <button class="btn glass more-btn">More</button>
-            <button class="btn primary copy-btn" data-script='loadstring(game:HttpGet("https://raw.githubusercontent.com/Gelatekussy/GelatekHub/main/Main.lua"))()'>Copy</button>
-          </div>
-        </div>
-
-        <div class="script glass">
-          <h3>Hold Hats</h3>
-          <p>Hat positioning utility.</p>
-          <div class="code-drawer">
-            <div class="drawer-inner">
-              <div class="code-box">loadstring(game:HttpGet("https://pastebin.com/raw/EvqnRMN1"))()</div>
-            </div>
-          </div>
-          <div class="script-actions">
-            <button class="btn glass more-btn">More</button>
-            <button class="btn primary copy-btn" data-script='loadstring(game:HttpGet("https://pastebin.com/raw/EvqnRMN1"))()'>Copy</button>
-          </div>
-        </div>
-
-        <div class="script glass">
-          <h3>Admin Noli</h3>
-          <p>Limb Reanimation script.</p>
-          <div class="code-drawer">
-            <div class="drawer-inner">
-              <div class="code-box">loadstring(game:HttpGet("https://raw.githubusercontent.com/Jskfhggjxu/My-Script/refs/heads/main/Admin%20Noli%20-%20Limb%20Reanimation.lua"))()</div>
-            </div>
-          </div>
-          <div class="script-actions">
-            <button class="btn glass more-btn">More</button>
-            <button class="btn primary copy-btn" data-script='loadstring(game:HttpGet("https://raw.githubusercontent.com/Jskfhggjxu/My-Script/refs/heads/main/Admin%20Noli%20-%20Limb%20Reanimation.lua"))()'>Copy</button>
           </div>
         </div>
       </div>
@@ -423,13 +320,10 @@ footer{margin-top:40px;padding:30px;border-top:1px solid var(--border);text-alig
       <div class="about-box glass">
         <p>Digital Domination is a private Roblox scripting/hacking group.</p>
         <div class="about-drawer" id="aboutDrawer">
-          <div class="drawer-inner">
-            <h4>Message from the owners</h4>
-            <p>Guys, We are really appreciating your support, dedication and honesty to the server.</p>
-          </div>
+          <div class="code-box">Guys, We are really appreciating your support, dedication and honesty to the server.</div>
         </div>
         <div style="margin-top: 16px;">
-          <button class="btn glass" id="aboutMoreBtn" style="font-size: 12px; padding: 8px 16px;">More</button>
+          <button onclick="toggleDrawer('aboutDrawer', this)" class="btn glass" style="font-size:12px;padding:8px 16px;">More</button>
         </div>
       </div>
     </section>
@@ -441,97 +335,110 @@ footer{margin-top:40px;padding:30px;border-top:1px solid var(--border);text-alig
 </div>
 
 <script>
-// --- ROBUST PASSCODE CHECK ---
 const correctPasscode = "spriteisgoat000";
 
-function verifyPasscode() {
-  try {
-    const inputField = document.getElementById("passcodeInput");
-    const overlay = document.getElementById("authOverlay");
-    const content = document.getElementById("mainContent");
-    const errorBox = document.getElementById("errorMsg");
+function unlockApp() {
+  const val = document.getElementById("passcodeInput").value.trim();
+  const overlay = document.getElementById("authOverlay");
+  const content = document.getElementById("mainContent");
+  const errorMsg = document.getElementById("errorMsg");
 
-    if (!inputField || !overlay || !content) {
-      alert("DOM elements missing!");
-      return;
-    }
-
-    const inputVal = inputField.value.trim();
-
-    if (inputVal === correctPasscode) {
+  if (val === correctPasscode) {
+    overlay.style.opacity = "0";
+    setTimeout(() => {
       overlay.style.display = "none";
       content.style.display = "block";
-    } else {
-      errorBox.style.display = "block";
-      inputField.style.borderColor = "#ef4444";
-      inputField.value = "";
-      inputField.focus();
-    }
-  } catch (err) {
-    alert("Passcode error: " + err.message);
+      fetchScriptBlox("");
+    }, 400);
+  } else {
+    errorMsg.style.display = "block";
+    document.getElementById("passcodeInput").style.borderColor = "#ef4444";
   }
 }
 
-window.addEventListener("DOMContentLoaded", () => {
-  const btn = document.getElementById("authBtn");
-  const input = document.getElementById("passcodeInput");
+function toggleMenu() {
+  document.getElementById("nav").classList.toggle("active");
+}
 
-  if (btn) btn.onclick = verifyPasscode;
-  if (input) {
-    input.focus();
-    input.onkeydown = (e) => {
-      if (e.key === "Enter") verifyPasscode();
-    };
+function toggleDrawer(id, btn) {
+  const drawer = document.getElementById(id);
+  drawer.classList.toggle("open");
+  btn.textContent = drawer.classList.contains("open") ? "Less" : "More";
+}
+
+async function searchScriptBlox() {
+  const query = document.getElementById("sbSearchInput").value;
+  fetchScriptBlox(query);
+}
+
+async function fetchScriptBlox(query = "") {
+  const grid = document.getElementById("sbResultsGrid");
+  grid.innerHTML = '<div class="sb-loading">Querying SumireX Database...</div>';
+
+  let url = "https://scriptblox.com/api/script/fetch?page=1";
+  if (query.trim() !== "") {
+    url = `https://scriptblox.com/api/script/search?q=${encodeURIComponent(query)}`;
   }
-});
 
-// --- WEBSITE MENU & 60FPS ANIMATED DRAWERS ---
-window.addEventListener("DOMContentLoaded", () => {
-  const menuBtn = document.getElementById("menuBtn");
-  const nav = document.getElementById("nav");
-  
-  if (menuBtn && nav) {
-    menuBtn.onclick = () => {
-      nav.classList.toggle("active");
-    };
-    nav.querySelectorAll("a").forEach(link => {
-      link.onclick = () => nav.classList.remove("active");
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    let scripts = data && data.result && data.result.scripts ? data.result.scripts : [];
+
+    if (scripts.length === 0) {
+      grid.innerHTML = '<div class="sb-empty">No scripts found.</div>';
+      return;
+    }
+
+    grid.innerHTML = "";
+    scripts.forEach((item, index) => {
+      const title = item.title || "Untitled Script";
+      const scriptCode = item.script || `-- No direct raw code provided`;
+      const gameName = item.game && item.game.name ? item.game.name : "Universal";
+      let gameImg = item.game && item.game.imageUrl ? item.game.imageUrl : "";
+      if (gameImg && gameImg.startsWith("/")) gameImg = "https://scriptblox.com" + gameImg;
+
+      const cardId = "sb-drawer-" + index;
+      const card = document.createElement("div");
+      card.className = "sb-card glass";
+      card.innerHTML = `
+        <div>
+          <div class="sb-card-top">
+            <img class="sb-game-img" src="${gameImg}" alt="" onerror="this.style.display='none'">
+            <div class="sb-game-info">
+              <h4>${gameName}</h4>
+              <span>Views: ${item.views || 0}</span>
+            </div>
+          </div>
+          <div class="sb-script-title">${title}</div>
+          <div class="sb-tags">
+            <span class="sb-tag">${item.scriptType || 'free'}</span>
+          </div>
+        </div>
+        <div>
+          <div class="code-drawer" id="${cardId}">
+            <div class="code-box">${scriptCode}</div>
+          </div>
+          <div class="script-actions">
+            <button onclick="toggleDrawer('${cardId}', this)" class="btn glass">More</button>
+            <button onclick="copyTextDirect('${scriptCode.replace(/'/g, "\\'")}', this)" class="btn primary">Copy</button>
+          </div>
+        </div>
+      `;
+      grid.appendChild(card);
     });
+  } catch (err) {
+    grid.innerHTML = '<div class="sb-empty">CORS restriction: Direct browser fetch blocked.</div>';
   }
+}
 
-  document.querySelectorAll(".more-btn").forEach(button => {
-    button.onclick = () => {
-      const card = button.closest(".script");
-      const drawer = card.querySelector(".code-drawer");
-      drawer.classList.toggle("open");
-      button.textContent = drawer.classList.contains("open") ? "Less" : "More";
-    };
+function copyTextDirect(text, btn) {
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = "Copied!";
+    setTimeout(() => { btn.textContent = orig; }, 2000);
   });
-
-  document.querySelectorAll(".copy-btn").forEach(button => {
-    button.onclick = () => {
-      const text = button.getAttribute("data-script");
-      navigator.clipboard.writeText(text).then(() => {
-        const originalText = button.textContent;
-        button.textContent = "Copied!";
-        button.style.transform = "scale3d(0.95, 0.95, 1)";
-        setTimeout(() => {
-          button.textContent = originalText;
-          button.style.transform = "scale3d(1, 1, 1)";
-        }, 2000);
-      });
-    };
-  });
-
-  const aboutMoreBtn = document.getElementById("aboutMoreBtn");
-  const aboutDrawer = document.getElementById("aboutDrawer");
-  if (aboutMoreBtn && aboutDrawer) {
-    aboutMoreBtn.onclick = () => {
-      aboutDrawer.classList.toggle("open");
-      aboutMoreBtn.textContent = aboutDrawer.classList.contains("open") ? "Less" : "More";
-    };
-  }
-});
+}
 </script>
 
 </body>
